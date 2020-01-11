@@ -6,6 +6,7 @@ Created on Thu Jan  9 14:12:45 2020
 """
 
 import subprocess
+from subprocess import PIPE
 import shutil
 
 def topas(SampDisp, CrySizeFix, fixvalue=25):
@@ -76,12 +77,19 @@ def topas(SampDisp, CrySizeFix, fixvalue=25):
     
     
     #コマンドの第1引数にinpファイル名を，第2引数にfixvalue値をわたす．
-    cmd = 'topas_from_py.bat ' + inp
-    if CrySizeFix:
-        cmd = cmd + " " + str(fixvalue)
+    #cmd = 'topas_from_py.bat ' + inp
+    #if CrySizeFix:
+    #    cmd = cmd + " " + str(fixvalue)
     
-    #subprocess.run(cmd)
-    return cmd
+    cmd = "test.bat"
+    dirname = "ttt2"
+    cmdlist = []
+    cmdlist.append(cmd)
+    cmdlist.append(dirname)
+    #shell=True をすると文字列の解析をやってくれる．これをしないと，引数をリストで渡す必要がある．
+    ret = subprocess.run(cmdlist, shell=True, stdout=PIPE, stderr=PIPE, text=True)
+    print(ret.stdout)
+    #return cmd
     
 
 
@@ -127,7 +135,7 @@ class Application(tk.Frame):
             self.label1["text"] = "CrySizeL の値を入力してください．"
         else:
             cmd = topas(self.var0.get(), self.var1.get(), self.txt.get())
-            subprocess.run(cmd)
+            #subprocess.run(cmd)
             self.label1["text"] = "実行完了"
 
     def switch(self):
