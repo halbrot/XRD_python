@@ -77,17 +77,17 @@ def topas(SampDisp, CrySizeFix, fixvalue=25):
     
     
     #コマンドの第1引数にinpファイル名を，第2引数にfixvalue値をわたす．
-    #cmd = 'topas_from_py.bat ' + inp
-    #if CrySizeFix:
-    #    cmd = cmd + " " + str(fixvalue)
+    cmd = 'topas_from_py.bat ' + inp
+    if CrySizeFix:
+        cmd = cmd + " " + str(fixvalue)
     
-    cmd = "test.bat"
-    dirname = "ttt2"
-    cmdlist = []
-    cmdlist.append(cmd)
-    cmdlist.append(dirname)
+#    cmd = "test.bat"
+#    dirname = "ttt2"
+#    cmdlist = []
+#    cmdlist.append(cmd)
+#    cmdlist.append(dirname)
     #shell=True をすると文字列の解析をやってくれる．これをしないと，引数をリストで渡す必要がある．
-    ret = subprocess.run(cmdlist, shell=True, stdout=PIPE, stderr=PIPE, text=True)
+    ret = subprocess.run(cmd, shell=True, stdout=PIPE, stderr=PIPE, text=True)
     print(ret.stdout)
     #return cmd
     
