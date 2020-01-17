@@ -49,4 +49,4 @@ for %%A in (*.raw) do (
 echo %param1%INP\%inpname%
 
 rem 解析時に一時的に作成された～.outファイルを削除する
-del %param1%%inpname%.out
+del %param1%for_python.out
