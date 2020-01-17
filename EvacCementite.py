@@ -6,6 +6,7 @@ Created on Thu Jan  9 14:12:45 2020
 """
 
 import subprocess
+from subprocess import PIPE
 import shutil
 
 def topas(SampDisp, CrySizeFix, fixvalue=25):
@@ -80,54 +81,72 @@ def topas(SampDisp, CrySizeFix, fixvalue=25):
     if CrySizeFix:
         cmd = cmd + " " + str(fixvalue)
     
-    res = subprocess.run(cmd)
-    
+#    cmd = "test.bat"
+#    dirname = "ttt2"
+#    cmdlist = []
+#    cmdlist.append(cmd)
+#    cmdlist.append(dirname)
+    #shell=True をすると文字列の解析をやってくれる．これをしないと，引数をリストで渡す必要がある．
+    ret = subprocess.run(cmd, shell=True, stdout=PIPE, stderr=PIPE, text=True)
+    print(ret.stdout)
+    #return cmd
     
 
 
 import tkinter as tk
 
-root = tk.Tk()
-root.geometry('300x200')
-root.title("TOPASバッチ処理")
 
-var0 = tk.BooleanVar()
-var1 = tk.BooleanVar()
-msg =tk.StringVar()
-
-
-def pushed():
-    label1["text"] = "実行中"
-    if var1.get()==True and txt.get()=="":
-        label1["text"] = "CrySizeL の値を入力してください．"
-    else:
-        topas(var0.get(), var1.get(), txt.get())
-        label1["text"] = "実行完了"
-
-def switch():
-    if var1.get():
-        txt.config(state="normal")
-    else:
-        txt.config(state="disabled")
+class Application(tk.Frame):
+    def __init__(self, master=None):
+        super().__init__(master)
+        self.pack()
+        master.geometry('300x200')
+        master.title("TOPASバッチ処理")
+        self.create_widgets()
         
-label0 = tk.Label(root, text="TOPASの設定をチェックして実行ボタンを押してください．")
-label0.place(x=20, y=20)
+    def create_widgets(self):
+        self.var0 = tk.BooleanVar()
+        self.var0 = tk.BooleanVar()
+        self.var1 = tk.BooleanVar()
+        self.msg =tk.StringVar()
+        
+        self.label0 = tk.Label(root, text="TOPASの設定をチェックして実行ボタンを押してください．")
+        self.label0.place(x=20, y=20)
+        
+        self.chk0 = tk.Checkbutton(root, variable = self.var0, text='Sample Displacement を精密化する')
+        self.chk0.place(x=50, y=50)
 
+        self.chk1 = tk.Checkbutton(root, variable = self.var1, text='CrySizeL を固定する', command=self.switch)
+        self.chk1.place(x=50, y=80)
 
-chk0 = tk.Checkbutton(root, variable = var0, text='Sample Displacement を精密化する')
-chk0.place(x=50, y=50)
+        self.txt = tk.Entry(width=10)
+        self.txt.place(x=180, y=80)
+        self.txt.config(state="disabled")
 
-chk1 = tk.Checkbutton(root, variable = var1, text='CrySizeL を固定する', command=switch)
-chk1.place(x=50, y=80)
+        self.btn = tk.Button(root, text="実行", width=20, command=self.pushed)
+        self.btn.place(x=70, y=120)
 
-txt = tk.Entry(width=10)
-txt.place(x=180, y=80)
-txt.config(state="disabled")
+        self.label1 = tk.Label(root, text="", )
+        self.label1.place(x=80, y=160)
+    
+    def pushed(self):
+        self.label1["text"] = ""
+        if self.var1.get()==True and self.txt.get()=="":
+            self.label1["text"] = "CrySizeL の値を入力してください．"
+        else:
+            cmd = topas(self.var0.get(), self.var1.get(), self.txt.get())
+            #subprocess.run(cmd)
+            self.label1["text"] = "実行完了"
 
-btn = tk.Button(root, text="実行", width=20, command=pushed)
-btn.place(x=70, y=120)
+    def switch(self):
+        if self.var1.get():
+            self.txt.config(state="normal")
+        else:
+            self.txt.config(state="disabled")
 
-label1 = tk.Label(root, text="", )
-label1.place(x=80, y=160)
+root = tk.Tk()
+app = Application(master=root)
 
-tk.mainloop()
+     
+
+app.mainloop()
