@@ -8,6 +8,7 @@ Created on Thu Jan  9 14:12:45 2020
 import subprocess
 from subprocess import PIPE
 import shutil
+import time
 
 def topas(SampDisp, CrySizeFix, fixvalue=25):
     
@@ -130,7 +131,8 @@ class Application(tk.Frame):
         self.label1.place(x=80, y=160)
     
     def pushed(self):
-        self.label1["text"] = ""
+        self.label1["text"] = "F"
+        time.sleep(5)
         if self.var1.get()==True and self.txt.get()=="":
             self.label1["text"] = "CrySizeL の値を入力してください．"
         else:
